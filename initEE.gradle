@@ -1,0 +1,16 @@
+/*
+  Gradle Project Creation Wizard Init Script
+  For a Simple Jakarta EE MVC Project
+*/
+allprojects {
+	ant.copy(todir: '') {
+		// Copy project files from customized template dir
+		fileset(dir: '../.metadata/ee_template/initEE')
+
+		// Copy gradle wrapper from original template dir
+		fileset(dir: '../.metadata/init.gradle_template') {
+			include(name: 'gradle*')
+			include(name: 'gradle/**')
+		}
+	}
+}
