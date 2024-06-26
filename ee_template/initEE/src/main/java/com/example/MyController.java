@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
  * CDI beanには引数のないコンストラクタが必須なので、
  * Lombokの@NoArgsConstructorで空っぽのコンストラクタを作成します。
  * 
- * @Path はこのクラス全体が扱うURLのパスで、JAX-RSのアノテーションです。
+ * @Path はこのクラス全体が扱うURLのパスで、Jakarta RESTのアノテーションです。
  * これは @ApplicationPath からの相対パスとなります。
  * パスの先頭の/と末尾の/はあってもなくても同じです。
  */

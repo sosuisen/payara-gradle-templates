@@ -5,8 +5,7 @@ import jakarta.ws.rs.core.Application;
 
 /**
  * このアプリを設定するために必須のクラスです。
- * Jakarta MVCは、Jakarta REST(旧JAX-RS)というAPIの上に作られているため、
- * Jakarta RESTのクラス Application を継承したクラスを宣言する必要があります。
+ * jakarta.ws.rs.core.Application を継承したクラスを宣言する必要があります。
  * 
  * @ApplicationPath は、このアプリが呼ばれるURLを指定するパスで、
  * コンテキストルート（通常はプロジェクト名）からの相対パスを書きます。

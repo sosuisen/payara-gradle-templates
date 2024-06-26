@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Echoアプリ</title>
+</head>
+<body>
+	<h1>WebSocketを用いたEchoアプリ</h1>
+	<input id="message" type="text" placeholder="ここにメッセージを入力してEnter" size="50" />
+	<button id="sendBtn">送信</button>
+	<br />
+	<button id="disconnect">切断</button><button id="reconnect">再接続</button>
+	<br />
+	<textarea id="chatArea" cols="50" rows="20"></textarea>
+	<script type="text/javascript">
+		const url = 'ws://localhost:8080/message-echo/echo';
+
+		let ws = null;
+
+		// サーバへメッセージを送信する
+		const sendMessage = () => {
+			if (ws == null) return;
+			// message欄のテキストを送信
+			ws.send(document.querySelector('#message').value);
+			// message欄をクリア
+			document.querySelector('#message').value = '';
+		};
+
+		// メッセージをチャットエリアに追加する
+		const addMessage = (message) => {
+			document.querySelector('#chatArea').value = message + '\n' + document.querySelector('#chatArea').value;
+		};
+
+		// open イベントリスナ
+		const onOpen = () => {
+			// 切断ボタンを有効化
+			document.querySelector('#disconnect').disabled = false;
+			// 再接続ボタンを無効化
+			document.querySelector('#reconnect').disabled = true;
+		};
+
+		// close イベントリスナ
+		const onClose = () => {
+			addMessage("[Closed]");
+			// イベントリスナの削除
+			ws.removeEventListener('open', onOpen);
+			ws.removeEventListener('close', onClose);
+			ws.removeEventListener('message', onMessage);
+			// 切断中は null にしておく
+			ws = null;
+
+			// 切断ボタンを無効化            
+			document.querySelector('#disconnect').disabled = true;
+			// 再接続ボタンを有効化
+			document.querySelector('#reconnect').disabled = false;
+		};
+
+		// message イベントリスナ
+		const onMessage = e => addMessage(e.data);
+
+		// サーバへ WebSocket で接続する。
+		const connect = () => {
+			ws = new WebSocket(url);
+			// イベントリスナを追加
+			// WebSocket が開いたとき
+			ws.addEventListener('open', onOpen);
+			// WebSocket が閉じたとき
+			ws.addEventListener('close', onClose);
+			// WebSocket でメッセージを受信したとき
+			ws.addEventListener('message', onMessage);
+		};
+		connect();
+
+		// UI 操作時の動作を設定
+		// メッセージを送信する操作(送信ボタン)
+		document.querySelector('#sendBtn').addEventListener("click", sendMessage);
+		// メッセージを送信する操作(Enterキー)
+		document.querySelector('#message').addEventListener("keypress", e => e.keyCode == 13 ? sendMessage() : null);
+		// WebSocket を閉じる操作
+		document.querySelector('#disconnect').addEventListener("click", () => {
+			if (ws == null) return;
+			ws.close();
+			// WebSocket が閉じたら close イベントリスナが呼ばれる。
+		});
+		// WebSocket を再接続する操作
+		document.querySelector('#reconnect').addEventListener("click", () => {
+			if (ws != null) return;
+			connect();
+		});
+
+	</script>
+</body>
+
+</html>
